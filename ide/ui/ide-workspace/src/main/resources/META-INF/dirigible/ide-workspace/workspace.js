@@ -156,7 +156,9 @@ WorkspaceService.prototype.createFolder = function (type) {
         text: this.newFileName('folder', 'folder')
     };
     inst.create_node(obj, node_tmpl, "last", function (new_node) {
-        setTimeout(function () { inst.edit(new_node); }, 0);
+        setTimeout(function () {
+            inst.edit(new_node);
+        }, 0);
     });
 };
 
@@ -167,12 +169,14 @@ WorkspaceService.prototype.createFile = function (name, path, node) {
         url += "/";
     if (!node.data)
         node.data = '';
-    return this.$http.post(url, JSON.stringify(node.data), { headers: { 'Dirigible-Editor': 'Workspace' } })
+    return this.$http.post(url, JSON.stringify(node.data), {headers: {'Dirigible-Editor': 'Workspace'}})
         .then(function (response) {
             let filePath = response.headers('location');
             filePath = filePath.substring(filePath.indexOf("/services"))
-            return this.$http.get(filePath, { headers: { 'describe': 'application/json' } })
-                .then(function (response) { return response.data; });
+            return this.$http.get(filePath, {headers: {'describe': 'application/json'}})
+                .then(function (response) {
+                    return response.data;
+                });
         }.bind(this))
         .catch(function (response) {
             let msg;
@@ -203,8 +207,10 @@ WorkspaceService.prototype.uploadFile = function (name, path, node) {
         .then(function (response) {
             let filePath = response.headers('location');
             filePath = filePath.substring(filePath.indexOf("/services"));
-            return this.$http.get(filePath, { headers: { 'describe': 'application/json' } })
-                .then(function (response) { return response.data; });
+            return this.$http.get(filePath, {headers: {'describe': 'application/json'}})
+                .then(function (response) {
+                    return response.data;
+                });
         }.bind(this))
         .catch(function (response) {
             let msg;
@@ -217,7 +223,7 @@ WorkspaceService.prototype.uploadFile = function (name, path, node) {
 };
 WorkspaceService.prototype.remove = function (filepath) {
     let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(filepath.split('/')).build();
-    return this.$http['delete'](url, { headers: { 'Dirigible-Editor': 'Workspace' } });
+    return this.$http['delete'](url, {headers: {'Dirigible-Editor': 'Workspace'}});
 };
 WorkspaceService.prototype.rename = function (oldName, newName, path) {
     let pathSegments = path.split('/');
@@ -255,7 +261,7 @@ WorkspaceService.prototype.copy = function (sourcePath, targetPath, sourceWorksp
 };
 WorkspaceService.prototype.load = function (wsResourcePath) {
     let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(wsResourcePath.split('/')).build();
-    return this.$http.get(url, { headers: { 'describe': 'application/json' } })
+    return this.$http.get(url, {headers: {'describe': 'application/json'}})
         .then(function (response) {
             return response.data;
         });
@@ -284,7 +290,7 @@ WorkspaceService.prototype.createProject = function (workspace, project, wsTree)
 };
 WorkspaceService.prototype.deleteProject = function (workspace, project, wsTree) {
     let url = new UriBuilder().path(this.workspacesServiceUrl.split('/')).path(workspace).path(project).build();
-    return this.$http.delete(url, { headers: { 'Dirigible-Editor': 'Workspace' } })
+    return this.$http.delete(url, {headers: {'Dirigible-Editor': 'Workspace'}})
         .then(function (response) {
             wsTree.refresh();
             return response.data;
@@ -374,7 +380,7 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
                     // Other types are handled by the context menu in '$treeConfig' factory
                     disabled = this.copy_node.type !== "project";
                 }
-                $.vakata.context.show(evt.target, { 'x': evt.pageX, 'y': evt.pageY }, {
+                $.vakata.context.show(evt.target, {'x': evt.pageX, 'y': evt.pageY}, {
                     "paste": {
                         "_disabled": disabled,
                         "label": "Paste",
@@ -457,11 +463,11 @@ WorkspaceTreeAdapter.prototype.init = function (containerEl, workspaceController
             this.workspaceController.selectedNodeData = data;
             this.workspaceController.showDeleteDialog(data.type);
         }.bind(this))
-        //	.on('jstree.workspace.file.properties', function (e, data) {
-        //	 	var url = data.path + '/' + data.name;
-        // 		this.openNodeProperties(url);
-        // 	}.bind(this))
-        ;
+    //	.on('jstree.workspace.file.properties', function (e, data) {
+    //	 	var url = data.path + '/' + data.name;
+    // 		this.openNodeProperties(url);
+    // 	}.bind(this))
+    ;
 
     this.jstree = $.jstree.reference(jstree);
     return this;
@@ -686,7 +692,9 @@ let TemplatesService = function ($http, $window, TEMPLATES_SVC_URL) {
 };
 TemplatesService.prototype.listTemplates = function () {
     let url = new UriBuilder().path(this.TEMPLATES_SVC_URL.split('/')).build();
-    return this.$http.get(url).then(function (response) { return response.data; });
+    return this.$http.get(url).then(function (response) {
+        return response.data;
+    });
 };
 
 angular.module('workspace.config', [])
@@ -731,7 +739,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
     .factory('messageHub', [function () {
         let messageHub = new FramesMessageHub();
         let send = function (evtName, data, absolute) {
-            messageHub.post({ data: data }, (absolute ? '' : 'workspace.') + evtName);
+            messageHub.post({data: data}, (absolute ? '' : 'workspace.') + evtName);
         };
         let announceFileSelected = function (fileDescriptor) {
             this.send('file.selected', fileDescriptor);
@@ -896,9 +904,13 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                     'stripes': true
                 },
                 'check_callback': function (o, n, p, i, m) {
-                    if (m && m.dnd && m.pos !== 'i') { return false; }
+                    if (m && m.dnd && m.pos !== 'i') {
+                        return false;
+                    }
                     if (o === "move_node" || o === "copy_node") {
-                        if (this.get_node(n).parent === this.get_node(p).id) { return false; }
+                        if (this.get_node(n).parent === this.get_node(p).id) {
+                            return false;
+                        }
                     }
                     if (o === 'delete_node') {
                         return false;
@@ -992,6 +1004,21 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                                     let fileNode = {
                                         type: 'file'
                                     };
+                                    tree.create_node(parentNode, fileNode, "last", function (new_node) {
+                                        tree.edit(new_node);
+                                    });
+                                }.bind(self,this)
+                            },
+                            /*XSJS File*/
+                            "create_xsjs_file": {
+                                "separator_after": true,
+                                "label": "XSJS File",
+                                "action": function (tree, data) {
+                                    let parentNode = tree.get_node(data.reference);
+                                    let fileNode = {
+                                        type: 'file'
+                                    };
+                                    fileNode.text = 'file.' + 'xsjs';
                                     tree.create_node(parentNode, fileNode, "last", function (new_node) {
                                         tree.edit(new_node);
                                     });
@@ -1195,7 +1222,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             generateFromTemplate: function (workspace, project, file, template, parameters, wsTree) {
                 let url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path('file').path(workspace).path(project).path(file.split('/')).build();
                 parameters = parameters === undefined || parameters === null ? [] : parameters;
-                return $http.post(url, { "template": template, "parameters": parameters })
+                return $http.post(url, {"template": template, "parameters": parameters})
                     .then(function (response) {
                         wsTree.refresh();
                         return response.data;
@@ -1204,7 +1231,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
             generateFromModel: function (workspace, project, file, template, parameters, wsTree) {
                 let url = new UriBuilder().path(GENERATION_SVC_URL.split('/')).path('model').path(workspace).path(project).path(file.split('/')).build();
                 parameters = parameters === undefined || parameters === null ? [] : parameters;
-                return $http.post(url, { "template": template, "parameters": parameters, "model": file })
+                return $http.post(url, {"template": template, "parameters": parameters, "model": file})
                     .then(function (response) {
                         wsTree.refresh();
                         return response.data;
@@ -1255,12 +1282,16 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
 
         this.filterModelTemplates = function (ext) {
             this.modelTemplates.length = 0;
-            this.templates.forEach(template => { if (template.extension === ext) this.modelTemplates.push(template); });
+            this.templates.forEach(template => {
+                if (template.extension === ext) this.modelTemplates.push(template);
+            });
         };
 
         this.filterGenericTemplates = function () {
             this.genericTemplates.length = 0;
-            this.templates.forEach(template => { if (template.extension === undefined || template.extension === null) this.genericTemplates.push(template); });
+            this.templates.forEach(template => {
+                if (template.extension === undefined || template.extension === null) this.genericTemplates.push(template);
+            });
         };
 
         this.refreshWorkspaces = function () {
@@ -1287,7 +1318,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         this.workspaceSelected = function () {
             if (this.wsTree) {
                 this.wsTree.workspaceName = this.selectedWorkspace;
-                localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({ "name": this.selectedWorkspace }));
+                localStorage.setItem('DIRIGIBLE.workspace', JSON.stringify({"name": this.selectedWorkspace}));
                 this.wsTree.refresh();
                 return;
             }
@@ -1403,7 +1434,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         };
 
         this.saveAll = function () {
-            messageHub.send('workbench.editor.save', { data: "" }, true);
+            messageHub.send('workbench.editor.save', {data: ""}, true);
         };
 
         this.uploadFile = function () {
@@ -1421,7 +1452,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
                 node.type = 'file';
                 node.data = data;
                 workspaceService.uploadFile(name, path, node);
-                messageHub.send('workspace.file.uploaded', { data: "" }, true);
+                messageHub.send('workspace.file.uploaded', {data: ""}, true);
             };
 
             r.readAsBinaryString(f);
@@ -1466,7 +1497,7 @@ angular.module('workspace', ['workspace.config', 'ideUiCore', 'ngAnimate', 'ngSa
         //$.jstree.defaults.unique.case_sensitive = true;
 
     }]);
-
+``
 const images = ['png', 'jpg', 'jpeg', 'gif'];
 const models = ['extension', 'extensionpoint', 'edm', 'model', 'dsm', 'schema', 'bpmn', 'job', 'listener', 'websocket', 'roles', 'constraints', 'table', 'view'];
 
@@ -1476,7 +1507,7 @@ function getIcon(f) {
         icon = "fa fa-git-square";
     } else if (f.type === 'file') {
         let ext = getFileExtension(f.name);
-        if (ext === 'js') {
+        if (ext === 'js' || ext === 'xsjs') {
             icon = "fa fa-file-code-o";
         } else if (ext === 'html') {
             icon = "fa fa-html5";

@@ -76,6 +76,7 @@ angular.module('ideUiCore', ['ngResource'])
 			if (xhr.status === 200) {
 				return JSON.parse(xhr.responseText);
 			}
+
 		}
 		let editorProviders = {};
 		let editorsForContentType = {};
