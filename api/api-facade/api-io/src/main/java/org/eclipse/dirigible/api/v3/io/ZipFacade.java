@@ -109,7 +109,7 @@ public class ZipFacade {
 		byte[] bytes = IOUtils.toByteArray(input);
 		return GsonHelper.GSON.toJson(bytes);
 	}
-	
+
 	/**
 	 * Read data from the provided {@link InputStream}
 	 * @param input The input stream to read from
@@ -130,6 +130,22 @@ public class ZipFacade {
 	public static final String readText(ZipInputStream input) throws IOException {
 		byte[] bytes = IOUtils.toByteArray(input);
 		return new String(bytes, StandardCharsets.UTF_8);
+	}
+
+	public static void unzip(String sourceLocation,String outputLocation){
+		String source = "some/compressed/file.zip";
+		String destination = "some/destination/folder";
+		String password = "password";
+
+		try {
+			ZipFile zipFile = new ZipFile(source);
+			if (zipFile.isEncrypted()) {
+				zipFile.setPassword(password);
+			}
+			zipFile.extractAll(destination);
+		} catch (ZipException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

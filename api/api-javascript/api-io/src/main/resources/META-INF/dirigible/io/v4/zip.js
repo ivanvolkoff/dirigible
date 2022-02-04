@@ -9,6 +9,8 @@
  * SPDX-FileCopyrightText: 2022 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
  * SPDX-License-Identifier: EPL-2.0
  */
+import {zip} from "@dirigible/io";
+
 /**
  * API v4 Zip
  *
@@ -55,6 +57,15 @@ exports.createZipInputStream = function(inputStream) {
 	zipInputStream.native = org.eclipse.dirigible.api.v3.io.ZipFacade.createZipInputStream(inputStream.native);
 	return zipInputStream;
 };
+
+exports.zip = function (folderPath,zipOutputPath){
+	return  org.eclipse.dirigible.repository.zip.RepositoryZipExporter.exportZip(folderPath,zipOutputPath);
+};
+
+exports.unZip = function (zipPath,folderOutputPath){
+	return  org.eclipse.dirigible.repository.zip.RepositoryZipImporter.importZip(zipPath,folderOutputPath);
+};
+
 
 exports.createZipOutputStream = function(outputStream) {
 
