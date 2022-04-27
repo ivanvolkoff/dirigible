@@ -698,9 +698,9 @@
 		<postgresql.version>42.3.3</postgresql.version>
 		<derby.version>10.15.2.0</derby.version>
 		<derbytools.version>10.15.2.0</derbytools.version>
-		<activemq.version>5.16.4</activemq.version>
+		<activemq.version>5.17.0</activemq.version>
 		<jsr250-api.version>1.0</jsr250-api.version>
-		<jetty.version>11.0.9</jetty.version>
+		<jetty.version>9.4.12.v20180830</jetty.version>
 		<lucene.version>8.5.1</lucene.version>
 		<chemistry.version>1.1.0</chemistry.version>
 		<flowable.version>6.7.2</flowable.version>
@@ -716,7 +716,7 @@
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<mongodb.version>3.12.7</mongodb.version>
 		<caffeine.version>3.0.5</caffeine.version>
-		<liquibase-core.version>4.7.1</liquibase-core.version>
+		<liquibase-core.version>4.9.1</liquibase-core.version>
 		<commons-csv.version>1.9.0</commons-csv.version>
 		<jquery-ui.version>1.13.0</jquery-ui.version>
 		<classgraph.version>4.8.139</classgraph.version>
